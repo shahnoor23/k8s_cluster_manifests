@@ -1,0 +1,23 @@
+How to install metric server on minikube:
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+kubectl top nodes
+
+kubectl get deployment metrics-server -n kube-system
+
+if error face edit deployment file:
+
+kubectl edit deployment -n kube-system metrics-server
+
+add follwoing under spec:
+command:
+- /metrics-server
+- --kubelet-insecure-tls
+- --kubelet-preferred-address-types=InternalIP
+
+
+
+Continuous Hit
+
+siege -q -c 5 -t 2m http://172.27.105.168:30199
