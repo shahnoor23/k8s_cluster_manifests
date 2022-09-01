@@ -1,0 +1,57 @@
+
+Persistent Volume — low level representation of a storage volume.
+Persistent Volume Claim — binding between a Pod and Persistent Volume.
+Storage Class — allows for dynamic provisioning of Persistent Volumes.
+
+
+
+Access Modes
+ReadWriteOnce(RWO) — volume can be mounted as read-write by a single node.
+ReadOnlyMany(ROX) — volume can be mounted read-only by many nodes.
+ReadWriteMany(RWX) — volume can be mounted as read-write by many nodes.
+ReadWriteOncePod(RWOP) — volume can be mounted as read-write by a single Pod.
+
+
+
+Types of Persistent Volumes
+AWS Elastic Block Store (EBS)
+Azure Disk
+Azure File
+GCE Persistent Disk
+Network File System (NFS) storage
+vSphere VMDK volume
+Many more…
+
+
+Persistent Volumes (PV)
+PV is an abstraction for the physical storage device that attached to the cluster. PV is used to manage durable storage which needs actual physical storage.
+PV is independent of the lifecycle of the Pods. It means that data represented by a PV continue to exist as the cluster changes and as Pods are deleted and recreated.
+PV is not Namespaced, it is available to whole cluster. i.e. PV is accessible to all namespaces.
+PV is resource in the cluster that can be provisioned dynamically using Storage Classes, or they can be explicitly created by a cluster administrator.
+Unlike Volumes, the PVs lifecycle is managed by Kubernetes.
+
+
+
+Persistent Volume Claims (PVC)
+PVC is binding between a Pod and PV. Pod request the Volume through the PVC.
+PVC is the request to provision persistent storage with a specific type and configuration.
+PVC is similar to a Pod. Pods consume node resources and PVC consume PV resources.
+Kubernetes looks for a PV that meets the criteria defined in the PVC, and if there is one, it matches claim to PV.
+PVCs describe the storage capacity and characteristics a pod requires, and the cluster attempts to match the request and provision the desired persistent volume.
+PVC must be in same namespace as the Pod. For each Pod, a PVC makes a storage consumption request within a namespace.
+Claims can request specific size and access modes (e.g., they can be mounted ReadWriteOnce, ReadOnlyMany or ReadWriteMany).
+
+
+Storage Classes (SC)
+StorageClass allows dynamic provisioning of Persistent Volumes, when PVC claims it.
+StorageClass abstracts underlying storage provider.
+StorageClass is used in conjunction with PVC that allow Pods to dynamically request a new storage.
+StorageClass use provisioners that are specific to the storage platform or cloud provider to give Kubernetes access to the physical storage.
+Each storage backend has own provisioner. Storage Backend is defined in the StorageClass component via provisioner attribute.
+
+
+Reclaim Policy
+PV that are dynamically created by a StorageClass will have the reclaim policy specified in the reclaimPolicy field of the class, which can be either Delete or Retain.
+If no reclaimPolicy is specified when a StorageClass object is created, it will default to Delete.
+PV that are created manually and managed via a StorageClass will have whatever reclaim policy they were assigned at creation.
+The reclaim policy applies to the persistent volumes not to the storage class itself. PVs and PVCs that are created using that StorageClass will inherit the reclaim policy set in StorageClass.

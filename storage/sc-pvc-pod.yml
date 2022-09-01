@@ -1,0 +1,38 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+    name: my-storageclass
+provisioner: kubernetes.io/aws-ebs
+
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-claim
+spec:
+   accessModes:
+     - ReadWriteOnce
+   storageClassName: my-storageclass 	
+   resources:
+       requests:
+           storage: 2Gi
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+    name: my-pod
+spec:
+   containers:
+   - name: stclass-test
+     image: nginx
+     volumeMounts:
+      - mountPath: "/app/data"
+        name: my-volume
+   volumes:
+    - name: my-volume
+      persistentVolumeClaim:
+         claimName: my-claim 
