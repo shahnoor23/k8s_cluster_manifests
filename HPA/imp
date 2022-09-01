@@ -21,3 +21,5 @@ command:
 Continuous Hit
 
 siege -q -c 5 -t 2m http://172.27.105.168:30199
+
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://hpa-demo-deployment; done"
